@@ -39,6 +39,8 @@ server.addTool({
       }
       const data = await response.text();
       const $ = cheerio.load(data);
+	  const afterScript = $('script').remove();
+	  const afterStyle = $('style').remove();
       const bodyText = $('body').text();
       
       // Include initialPrompt in the output if provided
