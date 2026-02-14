@@ -101,7 +101,7 @@ The server is configured to run on `http://localhost:14249/mcp` with the followi
 }
 ```
 
-For some clients it is required to start the server beforehand and replace the command part with, for example "command": "echho" and '"args": [""]'.
+For some clients it is required to start the server beforehand and replace the command part with, for example "command": "echo" and '"args": [""]'.
 
 ## License
 
