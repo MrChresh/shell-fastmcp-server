@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "cheerio": "^1.2.0",
-    "fastmcp": "^3.32.0",
-    "puppeteer": "^24.37.2"
+    "fastmcp": "^3.32.0"
   }
 }
