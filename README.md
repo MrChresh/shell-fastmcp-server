@@ -93,11 +93,15 @@ The server is configured to run on `http://localhost:14249/mcp` with the followi
 
 ```json
 {
-  "command": "npx",
-  "args": ["tsx", "shell-fastmcp-server/src/index.ts"],
-  "disable": false,
-  "url": "http://localhost:14249/mcp",
-  "type": "http"
+	{
+	  "mcpServers": {
+	   "shell-fastmcp-server": {
+		"disable": false,
+		"url": "http://localhost:14249/mcp",
+		"type": "streamable_http"
+	   }
+	  }
+	}
 }
 ```
 
