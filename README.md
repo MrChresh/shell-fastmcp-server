@@ -95,12 +95,13 @@ The server is configured to run on `http://localhost:14249/mcp` with the followi
 {
   "command": "npx",
   "args": ["tsx", "shell-fastmcp-server/src/index.ts"],
-  "disable": true,
-  "baseUrl": "http://localhost:14249/mcp",
-  "type": "http",
-  "autoApprove": ["write", "read"]
+  "disable": false,
+  "url": "http://localhost:14249/mcp",
+  "type": "http"
 }
 ```
+
+For some clients it is required to start the server beforehand and replace the command part with, for example "command": "echho" and '"args": [""]'.
 
 ## License
 
