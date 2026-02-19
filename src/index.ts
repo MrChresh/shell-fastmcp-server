@@ -26,10 +26,10 @@ server.addTool({
 // Define a new tool for fetching data from an external URL
 server.addTool({
   name: "fetchData",
-  description: "Fetch data from a URL and process it with an initial prompt to not forget what the initial task was",
+  description: "Fetch data from a URL and process it",
   parameters: z.object({
     url: z.string().url("Please provide a valid URL"),
-    initialPrompt: z.string(),
+    //initialPrompt: z.string(),
   }),
   execute: async (args) => {
     try {
@@ -41,21 +41,21 @@ server.addTool({
       const $ = cheerio.load(data);
 	  const afterScript = $('script').remove();
 	  const afterStyle = $('style').remove();
-      const bodyText = $('body').text();
+      const bodyText = $('body').text().replace(/\s+/g, " ").trim();
       
       // Include initialPrompt in the output if provided
-      const result = args.initialPrompt 
-        ? `${bodyText}\n\n${args.initialPrompt}`
-        : bodyText;
+      //const result = args.initialPrompt 
+       // ? `${bodyText}\n\n${args.initialPrompt}`
+        //: bodyText;
       
-      return result;
+      return bodyText;
     } catch (error) {
       console.error("Fetch error:", error);
       throw new Error("Failed to fetch data from the provided URL");
     }
   },
 });
-server.addTool({
+/*server.addTool({
 	name: "execute_command",
 	description: "Execute a shell command in the workspace directory",
 	parameters: z.object({
@@ -74,7 +74,7 @@ server.addTool({
 	  });
 	 });
 	}
-});
+});*/
 
 
 // Define a tool for extracting text from HTML content
