@@ -2,7 +2,7 @@ import { FastMCP } from 'fastmcp';
 import { z } from 'zod';
 import * as cheerio from 'cheerio';
 import { exec } from 'child_process';
-import is_ip_private from 'private-ip'
+
 
 // Initialize FastMCP server
 const server = new FastMCP({
@@ -33,11 +33,6 @@ server.addTool({
   }),
   execute: async (args) => {
     try {
-      if (is_ip_private(args.url)) {
-        throw new Error(
-          `Fetcher blocked an attempt to fetch a private IP ${args.url}. This is to prevent a security vulnerability where a local MCP could fetch privileged local IPs and exfiltrate data.`,
-        );
-      }
       const response = await fetch(args.url);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
