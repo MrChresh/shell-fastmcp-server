@@ -11,7 +11,7 @@ const server = new FastMCP({
   instructions: "The fetch tool has an mandatory maxLength parmeter if none is given, try 30000. you have following tools at your disposal: name: 'add', description: 'Add two numbers',   name: 'fetch', description: 'Fetch text from an URL, with mandatory maxLength.', 	name: 'execute_command', description: 'Execute a shell command in the workspace directory',",
 });
 
-// Define a tool (e.g., add two numbers)
+//  Add tool
 server.addTool({
   name: 'add',
   description: 'Add two numbers.',
@@ -22,6 +22,34 @@ server.addTool({
   execute: async (args) => {
     return String(args.a + args.b);
   },
+});
+// Subtract tool
+server.addTool({
+  name: 'subtract',
+  description: 'Subtract two numbers.',
+  parameters: z.object({ a: z.number(), b: z.number() }),
+  execute: async (args) => String(args.a - args.b)
+});
+
+// Multiply tool
+server.addTool({
+  name: 'multiply',
+  description: 'Multiply two numbers.',
+  parameters: z.object({ a: z.number(), b: z.number() }),
+  execute: async (args) => String(args.a * args.b)
+});
+
+// Divide tool (with zero division prevention)
+server.addTool({
+  name: 'divide',
+  description: 'Divide two numbers (cannot divide by zero).',
+  parameters: z.object({ a: z.number(), b: z.number() }),
+  execute: async (args) => {
+    if (args.b === 0) {
+      throw new Error('Division by zero is not allowed.');
+    }
+    return String(args.a / args.b);
+  }
 });
 
 server.addTool({
