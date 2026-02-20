@@ -114,7 +114,11 @@ server.addTool({
   }),
   execute: async (args) => {
     const $ = cheerio.load(args.htmlContent);
-    return $('body').text(); // Extract all text
+    const afterScript = $('script').remove();
+    const afterStyle = $('style').remove();
+    let bodyText = $('body').text().replace(/\s+/g, " ").trim();
+
+    return bodyText;
   },
 });
 server.on('connect', (event) => {
