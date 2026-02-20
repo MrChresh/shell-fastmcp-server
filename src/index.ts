@@ -2,19 +2,19 @@ import { FastMCP } from 'fastmcp';
 import { z } from 'zod';
 import * as cheerio from 'cheerio';
 import { exec } from 'child_process';
-import is_ip_private from "private-ip";
+import * as is_ip_private from 'private-ip'
 
 // Initialize FastMCP server
 const server = new FastMCP({
-  name: "Powershell server",
-  version: "1.0.0",
+  name: 'Powershell server',
+  version: '1.0.0',
   instructions: "The fetch tool has an mandatory maxLength parmeter if none is given, try 30000. you have following tools at your disposal: name: 'add', description: 'Add two numbers',   name: 'fetch', description: 'Fetch text from an URL, with mandatory maxLength.', 	name: 'execute_command', description: 'Execute a shell command in the workspace directory',",
 });
 
 // Define a tool (e.g., add two numbers)
 server.addTool({
-  name: "add",
-  description: "Add two numbers.",
+  name: 'add',
+  description: 'Add two numbers.',
   parameters: z.object({
     a: z.number(),
     b: z.number(),
@@ -25,10 +25,10 @@ server.addTool({
 });
 
 server.addTool({
-  name: "fetch",
-  description: "Fetch text from an URL, with mandatory maxLength.",
+  name: 'fetch',
+  description: 'Fetch text from an URL, with mandatory maxLength.',
   parameters: z.object({
-    url: z.string().url("Please provide a valid URL"),
+    url: z.string().url('Please provide a valid URL'),
     maxLength: z.number(),
   }),
   execute: async (args) => {
@@ -55,14 +55,14 @@ server.addTool({
 
       return bodyText;
     } catch (error) {
-      console.error("Fetch error:", error);
-      throw new Error("Failed to fetch data from the provided URL");
+      console.error('Fetch error:', error);
+      throw new Error('Failed to fetch data from the provided URL');
     }
   },
 });
 /*server.addTool({
-	name: "execute_command",
-	description: "Execute a shell command in the workspace directory",
+	name: 'execute_command',
+	description: 'Execute a shell command in the workspace directory',
 	parameters: z.object({
 	 command: z.string(),
 	 description: z.string().optional(),
@@ -84,8 +84,8 @@ server.addTool({
 
 // Define a tool for extracting text from HTML content
 server.addTool({
-  name: "extractText",
-  description: "Extract text from HTML content",
+  name: 'extractText',
+  description: 'Extract text from HTML content',
   parameters: z.object({
     htmlContent: z.string(),
   }),
@@ -94,17 +94,17 @@ server.addTool({
     return $('body').text(); // Extract all text
   },
 });
-server.on("connect", (event) => {
-  console.log("Client connected:", event.session);
+server.on('connect', (event) => {
+  console.log('Client connected:', event.session);
 });
 
-server.on("disconnect", (event) => {
-  console.log("Client disconnected:", event.session);
+server.on('disconnect', (event) => {
+  console.log('Client disconnected:', event.session);
 });
 server.start({
-  transportType: "httpStream",
+  transportType: 'httpStream',
   httpStream: {
     port: 14249,
-	host: "127.0.0.1"
+	host: '127.0.0.1'
   },
 });
