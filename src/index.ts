@@ -2,18 +2,19 @@ import { FastMCP } from 'fastmcp';
 import { z } from 'zod';
 import * as cheerio from 'cheerio';
 import { exec } from 'child_process';
+import is_ip_private from "private-ip";
 
 // Initialize FastMCP server
 const server = new FastMCP({
   name: "Powershell server",
   version: "1.0.0",
-  instructions: "The fetch data tool has a url and an initialPrompt paramter for you to use so that you dont forget your initial task or change your mind. you have following tools at your disposal: name: 'add', description: 'Add two numbers',   name: 'fetchData', description: 'Fetch data from a URL and process it with an initial prompt to not forget what the initial task was', 	name: 'execute_command', description: 'Execute a shell command in the workspace directory',",
+  instructions: "The fetch tool has an mandatory maxLength parmeter if none is given, try 30000. you have following tools at your disposal: name: 'add', description: 'Add two numbers',   name: 'fetch', description: 'Fetch text from an URL, with mandatory maxLength.', 	name: 'execute_command', description: 'Execute a shell command in the workspace directory',",
 });
 
 // Define a tool (e.g., add two numbers)
 server.addTool({
   name: "add",
-  description: "Add two numbers",
+  description: "Add two numbers.",
   parameters: z.object({
     a: z.number(),
     b: z.number(),
@@ -23,31 +24,35 @@ server.addTool({
   },
 });
 
-// Define a new tool for fetching data from an external URL
 server.addTool({
-  name: "fetchData",
-  description: "Fetch data from a URL and process it",
+  name: "fetch",
+  description: "Fetch text from an URL, with mandatory maxLength.",
   parameters: z.object({
     url: z.string().url("Please provide a valid URL"),
-    //initialPrompt: z.string(),
+    maxLength: z.number(),
   }),
   execute: async (args) => {
     try {
+      if (is_ip_private(args.url)) {
+        throw new Error(
+          `Fetcher blocked an attempt to fetch a private IP ${args.url}. This is to prevent a security vulnerability where a local MCP could fetch privileged local IPs and exfiltrate data.`,
+        );
+      }
       const response = await fetch(args.url);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.text();
       const $ = cheerio.load(data);
-	  const afterScript = $('script').remove();
-	  const afterStyle = $('style').remove();
-      const bodyText = $('body').text().replace(/\s+/g, " ").trim();
-      
-      // Include initialPrompt in the output if provided
-      //const result = args.initialPrompt 
-       // ? `${bodyText}\n\n${args.initialPrompt}`
-        //: bodyText;
-      
+      const afterScript = $('script').remove();
+      const afterStyle = $('style').remove();
+      let bodyText = $('body').text().replace(/\s+/g, " ").trim();
+
+      // Apply maxLength if provided
+      if (args.maxLength) {
+        bodyText = bodyText.substring(0, args.maxLength);
+      }
+
       return bodyText;
     } catch (error) {
       console.error("Fetch error:", error);
