@@ -2,7 +2,7 @@ import { FastMCP } from 'fastmcp';
 import { z } from 'zod';
 import * as cheerio from 'cheerio';
 import { exec } from 'child_process';
-import * as is_ip_private from 'private-ip'
+import is_ip_private from 'private-ip'
 
 // Initialize FastMCP server
 const server = new FastMCP({
