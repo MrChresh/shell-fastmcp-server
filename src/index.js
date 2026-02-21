@@ -128,8 +128,9 @@ server.on('connect', (event) => {
 server.on('disconnect', (event) => {
   console.log('Client disconnected:', event.session);
 });
+
 server.start({
-  transportType: 'httpStream',
+  transportType: 'stdio',
   httpStream: {
     port: 14249,
 	host: '127.0.0.1'
